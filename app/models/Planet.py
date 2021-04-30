@@ -5,3 +5,6 @@ class Planet(db.Model):
     name = db.Column(db.String)
     description = db.Column(db.String)
     size = db.Column(db.String)
+
+    def to_string(self):
+        return f"{self.id}: {self.name} Description: {self.description} Size: {self.size}"
