@@ -1,7 +1,7 @@
 from app import db 
 from flask import Blueprint
 from flask import request
-
+from app.models.planet import Planet
 
 solar_system_bp = Blueprint("solar_system", __name__)
 planets_bp = Blueprint("", __name__, url_prefix="/planets")
