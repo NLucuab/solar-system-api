@@ -1,4 +1,6 @@
 from flask import Blueprint
+from flask import request
+
 
 solar_system_bp = Blueprint("solar_system", __name__)
 
