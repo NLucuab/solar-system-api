@@ -5,6 +5,24 @@ from app.models.planet import Planet
 solar_system_bp = Blueprint("solar_system", __name__)
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
+@planets_bp.route("/<planet_id>", methods = ["GET"], strict_slashes = False)
+def get_single_planet(planet_id):
+    # searches for the planet with the provided id
+    planet = Planet.query.get(planet_id)
+
+    if planet:
+        return {
+                "id": planet.id,
+                "name": planet.name,
+                "description": planet.description,
+                "size": planet.size
+            }, 200 
+
+    return {
+        "message": f"Planet with id {planet_id} was not found",
+        "success": False
+    }, 404
+    
 @planets_bp.route("", methods=["POST", "GET"], strict_slashes = False)
 def planet():
     if request.method == "GET":
