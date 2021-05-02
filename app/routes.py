@@ -1,10 +1,9 @@
 from app import db 
-from flask import Blueprint
-from flask import request
+from flask import Blueprint, request, jsonify
 from app.models.planet import Planet
 
 solar_system_bp = Blueprint("solar_system", __name__)
-planets_bp = Blueprint("", __name__, url_prefix="/planets")
+planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
 @planets_bp.route("", methods=["POST"])
 def planet():
@@ -15,7 +14,7 @@ def planet():
     size = request_body["size"])
 
     db.session.add(new_planet)
-    db.commit()
+    db.session.commit()
 
     return (f"planet #{new_planet.name} has been created.", 201)
 
