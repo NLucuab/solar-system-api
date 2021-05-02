@@ -5,18 +5,34 @@ from app.models.planet import Planet
 solar_system_bp = Blueprint("solar_system", __name__)
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
-@planets_bp.route("", methods=["POST"], strict_slashes = False)
+@planets_bp.route("", methods=["POST", "GET"], strict_slashes = False)
 def planet():
-    request_body = request.get_json()
+    if request.method == "GET":
+        planets = Planet.query.all()
+        planets_response = []
+        for planet in planets:
+            planets_response.append({
+                "id": planet.id,
+                "name": planet.name,
+                "description": planet.description,
+                "size": planet.size
+            })
+        
+        return jsonify(planets_response), 200
 
-    new_planet = Planet(name = request_body["name"], 
-    description = request_body["description"], 
-    size = request_body["size"])
+    else:    
+        request_body = request.get_json()
 
-    db.session.add(new_planet)
-    db.session.commit()
+        new_planet = Planet(name = request_body["name"], 
+        description = request_body["description"], 
+        size = request_body["size"])
 
-    return (f"planet {new_planet.name} has been created.", 201)
+        db.session.add(new_planet)
+        db.session.commit()
+
+        return {
+            "success": True,
+            "message": f"planet {new_planet.name} has been created."}, 201
 
 
 # @solar_system_bp.route("/solar-system", methods=["GET"])
