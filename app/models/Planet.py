@@ -6,5 +6,10 @@ class Planet(db.Model):
     description = db.Column(db.String)
     size = db.Column(db.String)
 
-    def to_string(self):
-        return f"{self.id}: {self.name} Description: {self.description} Size: {self.size}"
+    def to_json(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "size": self.size
+        }
