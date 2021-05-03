@@ -73,7 +73,6 @@ def handle_planet(planet_id):
                 "message": f"Planet {planet_id} successfully updated"
             }, 200
 
-
     # Deletes a planet object from database
     elif request.method == "DELETE":
         if planet:
