@@ -56,7 +56,6 @@ def handle_planet(planet_id):
         if planet:
             return planet.to_json(), 200
 
-
     # Updates a planet object using provided request body information
     elif request.method == "PUT":
         if planet:
