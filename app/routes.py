@@ -34,7 +34,7 @@ def is_int(value):
     except ValueError:
         return False
 
-@planets_bp.route("/<planet_id>", methods=["GET"], strict_slashes = False)
+@planets_bp.route("/<planet_id>", methods=["GET"], strict_slashes=False)
 def get_single_planet(planet_id):
     # searches for the planet with the provided id
     if not is_int(planet_id):
@@ -52,3 +52,20 @@ def get_single_planet(planet_id):
         "message": f"Planet with ID {planet_id} was not found",
         "success": False
     }, 404
+
+@planets_bp.route("/<planet_id>", methods=["PUT"], strict_slashes=False)
+def update_planet(planet_id):
+    planet = Planet.query.get(planet_id)
+
+    form_data = request.get_json()
+
+    planet.name = form_data["name"]
+    planet.description = form_data["description"]
+    planet.size = form_data["size"]
+
+    db.session.commit()
+
+    return {
+        "success": True,
+        "message": f"Planet {planet_id} successfully updated."
+    }
