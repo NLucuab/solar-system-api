@@ -40,26 +40,26 @@ def is_int(value):
 @planets_bp.route("/<planet_id>", methods=["GET","PUT","DELETE"], strict_slashes=False)
 # Applies different request methods to specific planet objects
 def handle_planet(planet_id):
-    planet = Planet.query.get(planet_id)
 
-    # Searches for the planet with the provided id
-    if request.method == "GET":
-    
-        if not is_int(planet_id):
+    if not is_int(planet_id):
             return{
                 "message": f"ID {planet_id} must be an integer",
                 "success": False
             }, 400
+    
+    # return {
+    #         "message": f"Planet with ID {planet_id} was not found",
+    #         "success": False
+    #     }, 404
 
-        planet = Planet.query.get(planet_id)
+    planet = Planet.query.get(planet_id)
+
+    # Searches for the planet with the provided id
+    if request.method == "GET":
 
         if planet:
             return planet.to_json(), 200
 
-        return {
-            "message": f"Planet with ID {planet_id} was not found",
-            "success": False
-        }, 404
 
     # Updates a planet object using provided request body information
     elif request.method == "PUT":
