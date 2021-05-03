@@ -5,6 +5,7 @@ from app.models.planet import Planet
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
 @planets_bp.route("", methods=["POST"], strict_slashes=False)
+# Creates a planet object using provided request body information
 def planets():
     request_body = request.get_json()
     new_planet = Planet(name=request_body["name"],
@@ -19,6 +20,7 @@ def planets():
         }, 201
 
 @planets_bp.route("", methods=["GET"], strict_slashes=False)
+# Returns a list of all of the planets in the database
 def planets_index():
     planets = Planet.query.all()
     planets_response = []
@@ -27,7 +29,8 @@ def planets_index():
         planets_response.append(planet.to_json())
     
     return jsonify(planets_response), 200
-# checks if 
+
+# Checks if the provided value is an integer; if not, returns false
 def is_int(value):
     try:
         return int(value)
@@ -35,10 +38,11 @@ def is_int(value):
         return False
 
 @planets_bp.route("/<planet_id>", methods=["GET","PUT","DELETE"], strict_slashes=False)
+# Applies different request methods to specific planet objects
 def handle_planet(planet_id):
     planet = Planet.query.get(planet_id)
 
-    # searches for the planet with the provided id
+    # Searches for the planet with the provided id
     if request.method == "GET":
     
         if not is_int(planet_id):
@@ -57,7 +61,7 @@ def handle_planet(planet_id):
             "success": False
         }, 404
 
-    # update a planet object
+    # Updates a planet object using provided request body information
     elif request.method == "PUT":
         if planet:
             form_data = request.get_json()
@@ -78,7 +82,7 @@ def handle_planet(planet_id):
             "success": False
             }, 404
 
-    # delete a planet object
+    # Deletes a planet object from database
     elif request.method == "DELETE":
         if planet:
 
