@@ -1,3 +1,4 @@
+from flask.helpers import make_response
 from app import db 
 from flask import Blueprint, request, jsonify
 from app.models.planet import Planet
@@ -46,11 +47,6 @@ def handle_planet(planet_id):
                 "message": f"ID {planet_id} must be an integer",
                 "success": False
             }, 400
-    
-    # return {
-    #         "message": f"Planet with ID {planet_id} was not found",
-    #         "success": False
-    #     }, 404
 
     planet = Planet.query.get(planet_id)
 
@@ -77,10 +73,6 @@ def handle_planet(planet_id):
                 "message": f"Planet {planet_id} successfully updated"
             }, 200
 
-        return {
-            "message": f"Planet with ID {planet_id} was not found",
-            "success": False
-            }, 404
 
     # Deletes a planet object from database
     elif request.method == "DELETE":
@@ -94,7 +86,7 @@ def handle_planet(planet_id):
                 "message": f"Planet {planet_id} successfully deleted"
             }, 200
 
-        return {
-            "message": f"Planet with ID {planet_id} was not found",
-            "success": False
-            }, 404
+    return make_response({
+        "message": f"Planet with ID {planet_id} was not found",
+        "success": False
+    }, 404)
