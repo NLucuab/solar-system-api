@@ -59,24 +59,38 @@ def edit_or_delete_planet(planet_id):
     
     # update a planet object
     if request.method == "PUT":
-        form_data = request.get_json()
+        if planet:
+            form_data = request.get_json()
 
-        planet.name = form_data["name"]
-        planet.description = form_data["description"]
-        planet.size = form_data["size"]
+            planet.name = form_data["name"]
+            planet.description = form_data["description"]
+            planet.size = form_data["size"]
 
-        db.session.commit()
+            db.session.commit()
 
+            return {
+                "success": True,
+                "message": f"Planet {planet_id} successfully updated"
+            }, 200
+            
         return {
-            "success": True,
-            "message": f"Planet {planet_id} successfully updated"
-        }
+            "message": f"Planet with ID {planet_id} was not found",
+            "success": False
+            }, 404
+
     # delete a planet object
     elif request.method == "DELETE":
-        db.session.delete(planet)
-        db.session.commit()
+        if planet:
+
+            db.session.delete(planet)
+            db.session.commit()
+
+            return {
+                "success": True,
+                "message": f"Planet {planet_id} successfully deleted"
+            }, 200
 
         return {
-            "success": True,
-            "message": f"Planet {planet_id} successfully deleted"
-        }
+            "message": f"Planet with ID {planet_id} was not found",
+            "success": False
+            }, 404
