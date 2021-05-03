@@ -53,19 +53,30 @@ def get_single_planet(planet_id):
         "success": False
     }, 404
 
-@planets_bp.route("/<planet_id>", methods=["PUT"], strict_slashes=False)
-def update_planet(planet_id):
+@planets_bp.route("/<planet_id>", methods=["PUT", "DELETE"], strict_slashes=False)
+def edit_or_delete_planet(planet_id):
     planet = Planet.query.get(planet_id)
+    
+    # update a planet object
+    if request.method == "PUT":
+        form_data = request.get_json()
 
-    form_data = request.get_json()
+        planet.name = form_data["name"]
+        planet.description = form_data["description"]
+        planet.size = form_data["size"]
 
-    planet.name = form_data["name"]
-    planet.description = form_data["description"]
-    planet.size = form_data["size"]
+        db.session.commit()
 
-    db.session.commit()
+        return {
+            "success": True,
+            "message": f"Planet {planet_id} successfully updated"
+        }
+    # delete a planet object
+    elif request.method == "DELETE":
+        db.session.delete(planet)
+        db.session.commit()
 
-    return {
-        "success": True,
-        "message": f"Planet {planet_id} successfully updated."
-    }
+        return {
+            "success": True,
+            "message": f"Planet {planet_id} successfully deleted"
+        }
