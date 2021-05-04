@@ -20,8 +20,10 @@ def client(app):
 @pytest.fixture
 def two_saved_planets(app):
     swirly_planet = Planet(name="Swirly Planet",
-                            description="a swirl planet")
+                            description="a swirl planet",
+                            size="Small")
     loopy_planet = Planet(name="Loopy Planet",
-                            description="a loop planet")
+                            description="a loop planet",
+                            size="Medium")
     db.session.add_all(swirly_planet, loopy_planet)
     db.session.commit()
