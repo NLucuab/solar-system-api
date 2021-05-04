@@ -23,12 +23,19 @@ def planets():
 @planets_bp.route("", methods=["GET"], strict_slashes=False)
 # Returns a list of all of the planets in the database
 def planets_index():
-    planets = Planet.query.all()
-    planets_response = []
+    name_from_url = request.args.get("name")
+    # search for planet by name
+    if name_from_url:
+        planets = Planet.query.filter_by(name=name_from_url)
+    # search for all planets
+    else:
+        planets = Planet.query.all()
 
+    planets_response = []
+        
     for planet in planets:
         planets_response.append(planet.to_json())
-    
+
     return jsonify(planets_response), 200
 
 # Checks if the provided value is an integer; if not, returns false
