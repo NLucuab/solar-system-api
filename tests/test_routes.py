@@ -10,6 +10,7 @@ def test_create_one_planet(client):
     # Assert 
     assert response.status_code == 201
     assert response_body['message'] == "Planet ZigZag successfully created"
+    assert response_body['success'] == True
 
 def test_get_one_planet(client, two_saved_planets):
     #Act
@@ -18,4 +19,7 @@ def test_get_one_planet(client, two_saved_planets):
 
     #Assert
     assert response.status_code == 200
-    assert response_body == {"id": 1, "title": "Swirly Planet", "description": "a swirl planet"}
+    assert response_body["id"] == 1
+    assert response_body["name"] == "Swirly Planet"
+    assert response_body["description"] == "a swirl planet"
+    assert response_body["size"] == "Small"

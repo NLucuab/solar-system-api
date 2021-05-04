@@ -25,5 +25,5 @@ def two_saved_planets(app):
     loopy_planet = Planet(name="Loopy Planet",
                             description="a loop planet",
                             size="Medium")
-    db.session.add_all(swirly_planet, loopy_planet)
+    db.session.add_all([swirly_planet, loopy_planet])
     db.session.commit()
