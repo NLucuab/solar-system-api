@@ -26,5 +26,3 @@ def create_app(test_config=None):
     app.register_blueprint(planets_bp)
 
     return app
-
-# Hi Summer! Hope this works!
