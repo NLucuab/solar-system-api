@@ -48,52 +48,44 @@ def is_int(value):
 @planets_bp.route("/<planet_id>", methods=["GET","PUT","DELETE"], strict_slashes=False)
 # Applies different request methods to specific planet objects
 def handle_planet(planet_id):
+    if not is_int(planet_id):
+        return{
+            "message": f"ID {planet_id} must be an integer",
+            "success": False
+        }, 400
+
     planet = Planet.query.get(planet_id)
     
-    if planets is None:
-        return make_response("", 404)
-
-    if not is_int(planet_id):
-            return{
-                "message": f"ID {planet_id} must be an integer",
-                "success": False
-            }, 400
-
-    # Searches for the planet with the provided id
-    if request.method == "GET":
-
-        if planet:
-            return planet.to_json(), 200
-
-    # Updates a planet object using provided request body information
-    elif request.method == "PUT":
-        if planet:
-            form_data = request.get_json()
-
-            planet.name = form_data["name"]
-            planet.description = form_data["description"]
-            planet.size = form_data["size"]
-
-            db.session.commit()
-
-            return {
-                "success": True,
-                "message": f"Planet {planet_id} successfully updated"
-            }, 200
-
-    # Deletes a planet object from database
-    elif request.method == "DELETE":
-        if planet:
-
-            db.session.delete(planet)
-            db.session.commit()
-
-            return {
-                "success": True,
-                "message": f"Planet {planet_id} successfully deleted"
-            }, 200
-
-    return make_response({
+    if planet is None:
+        return make_response({
         "message": f"Planet with ID {planet_id} was not found",
         "success": False
     }, 404)
+
+    # Searches for the planet with the provided id
+    if request.method == "GET":
+        return planet.to_json(), 200
+    # Updates a planet object using provided request body information
+    elif request.method == "PUT":
+        form_data = request.get_json()
+
+        planet.name = form_data["name"]
+        planet.description = form_data["description"]
+        planet.size = form_data["size"]
+
+        db.session.commit()
+
+        return {
+            "success": True,
+            "message": f"Planet {planet_id} successfully updated"
+        }, 200
+
+    # Deletes a planet object from database
+    else:
+        db.session.delete(planet)
+        db.session.commit()
+
+        return {
+            "success": True,
+            "message": f"Planet {planet_id} successfully deleted"
+        }, 200
